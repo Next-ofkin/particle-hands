@@ -11,15 +11,15 @@ function App() {
   useEffect(() => {
     if (!containerRef.current) return;
 
-    console.log('🚀 Initializing MEGA Particle System...');
+    console.log('🚀 Initializing Rainbow Nanobot System...');
 
     const threeScene = new ThreeScene(containerRef.current);
     sceneRef.current = threeScene;
 
-    // Create MEGA particles!
+    // Create nanobots - reduced count for visibility
     const particleSystem = threeScene.getParticleSystem();
     if (particleSystem) {
-      particleSystem.createMegaParticles(10000); // 10k real, looks like 5 million!
+      particleSystem.createMegaParticles(1000); // 2000 visible nanobots!
       setParticleCount(particleSystem.getParticleCount());
     }
 
@@ -37,9 +37,9 @@ function App() {
       <div className="canvas-container" ref={containerRef} />
       
       <div className="info-overlay">
-        <p>ParticleHands - MEGA MODE 🔥</p>
+        <p>ParticleHands - Rainbow Nanobots 🌈</p>
         <p style={{ fontSize: '12px', marginTop: '4px', opacity: 0.7 }}>
-          The impossible made possible ✨
+          Colorful nanobots • Clean & visible ✨
         </p>
       </div>
 
