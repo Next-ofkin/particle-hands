@@ -1,73 +1,56 @@
-# React + TypeScript + Vite
+# ParticleHands 🎨✨
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A camera-controlled 3D particle interaction system that lets you sculpt digital matter with your bare hands.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🎯 Real-time 3D particle rendering with Three.js
+- 🤚 Hand tracking via MediaPipe (coming soon)
+- 🎮 60fps performance optimization
+- 📱 Responsive design (desktop & mobile)
+- 🔒 Privacy-first: All processing happens locally
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend:** React 18 + TypeScript
+- **3D Graphics:** Three.js
+- **Build Tool:** Vite
+- **Hosting:** Vercel
+- **Hand Tracking:** MediaPipe Hands (in progress)
 
-## Expanding the ESLint configuration
+## Development
+```bash
+# Install dependencies
+npm install
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+# Start dev server
+npm run dev
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Build for production
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Current Status
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+✅ Phase 1: Foundation Complete  
+✅ Three.js Scene Setup  
+✅ Particle System Core  
+✅ Performance Optimization  
+🟡 Hand Tracking Integration (In Progress)  
+⏳ Gesture Detection  
+⏳ Shape Formation  
+⏳ Recording & Export  
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Performance
+
+- Target: 60fps
+- Current: 55-60fps with optimized rendering
+- Particle Count: Scalable to 10,000+
+
+## License
+
+MIT
+
+---
+
+**Built with ❤️ by Excel**
