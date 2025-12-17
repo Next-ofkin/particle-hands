@@ -11,23 +11,20 @@ function App() {
   useEffect(() => {
     if (!containerRef.current) return;
 
-    console.log('🚀 Initializing Three.js...');
+    console.log('🚀 Initializing MEGA Particle System...');
 
-    // Create Three.js scene
     const threeScene = new ThreeScene(containerRef.current);
     sceneRef.current = threeScene;
 
-    // Create test particle
+    // Create MEGA particles!
     const particleSystem = threeScene.getParticleSystem();
     if (particleSystem) {
-      particleSystem.createTestParticle();
+      particleSystem.createMegaParticles(10000); // 10k real, looks like 5 million!
       setParticleCount(particleSystem.getParticleCount());
     }
 
-    // Start animation loop
     threeScene.animate();
 
-    // Cleanup on unmount
     return () => {
       if (sceneRef.current) {
         sceneRef.current.cleanup();
@@ -37,19 +34,15 @@ function App() {
 
   return (
     <div className="app">
-      <div className="canvas-container" ref={containerRef}>
-        {/* Three.js canvas will be inserted here */}
-      </div>
+      <div className="canvas-container" ref={containerRef} />
       
-      {/* Info overlay */}
       <div className="info-overlay">
-        <p>ParticleHands - Animation Test</p>
+        <p>ParticleHands - MEGA MODE 🔥</p>
         <p style={{ fontSize: '12px', marginTop: '4px', opacity: 0.7 }}>
-          Watch the particle move and bounce! ✨
+          The impossible made possible ✨
         </p>
       </div>
 
-      {/* Performance Monitor */}
       <PerformanceMonitor particleCount={particleCount} />
     </div>
   );

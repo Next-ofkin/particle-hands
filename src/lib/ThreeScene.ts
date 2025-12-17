@@ -1,21 +1,19 @@
 import * as THREE from 'three';
-import { ParticleSystem } from './ParticleSystem';
+import { MegaParticleSystem } from './MegaParticleSystem';
 
 export class ThreeScene {
   private scene: THREE.Scene;
   private camera: THREE.PerspectiveCamera;
   private renderer: THREE.WebGLRenderer;
   private container: HTMLElement;
-  private particleSystem: ParticleSystem | null = null;
+  private particleSystem: MegaParticleSystem | null = null;
 
   constructor(container: HTMLElement) {
     this.container = container;
     
-    // Create scene
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x0a0a12); // Simple color instead of gradient
+    this.scene.background = new THREE.Color(0x0a0a12);
     
-    // Create camera
     this.camera = new THREE.PerspectiveCamera(
       60,
       window.innerWidth / window.innerHeight,
@@ -26,27 +24,22 @@ export class ThreeScene {
     this.camera.position.set(0, 0, 100);
     this.camera.lookAt(0, 0, 0);
     
-    // Create renderer with optimized settings
     this.renderer = new THREE.WebGLRenderer({
-      antialias: false, // Disabled for better performance
+      antialias: false,
       alpha: false,
       powerPreference: 'high-performance',
     });
     
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.setPixelRatio(1); // Lock to 1x for performance
+    this.renderer.setPixelRatio(1);
     
-    // Add canvas to container
     this.container.appendChild(this.renderer.domElement);
     
-    // Initialize particle system
-    this.particleSystem = new ParticleSystem(this.scene);
+    this.particleSystem = new MegaParticleSystem(this.scene);
     
-    // Handle window resize
     window.addEventListener('resize', this.handleResize);
     
-    console.log('✅ Three.js scene initialized (performance mode)');
-    console.log('📷 Camera position:', this.camera.position);
+    console.log('✅ MEGA Three.js scene initialized');
   }
   
   private handleResize = () => {
@@ -58,12 +51,10 @@ export class ThreeScene {
   public animate = () => {
     requestAnimationFrame(this.animate);
     
-    // Update particle system
     if (this.particleSystem) {
       this.particleSystem.update();
     }
     
-    // Render
     this.renderer.render(this.scene, this.camera);
   };
   
@@ -79,7 +70,7 @@ export class ThreeScene {
     return this.renderer;
   }
   
-  public getParticleSystem(): ParticleSystem | null {
+  public getParticleSystem(): MegaParticleSystem | null {
     return this.particleSystem;
   }
   
@@ -92,6 +83,6 @@ export class ThreeScene {
     
     this.container.removeChild(this.renderer.domElement);
     this.renderer.dispose();
-    console.log('🧹 Three.js scene cleaned up');
+    console.log('🧹 MEGA Three.js scene cleaned up');
   }
 }
