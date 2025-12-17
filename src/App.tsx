@@ -1,35 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useRef, useState } from 'react';
+import './App.css';
+import { ThreeScene } from './lib/ThreeScene';
+import { PerformanceMonitor } from './components/PerformanceMonitor';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const containerRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<ThreeScene | null>(null);
+  const [particleCount, setParticleCount] = useState<number>(0);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    console.log('🚀 Initializing Three.js...');
+
+    // Create Three.js scene
+    const threeScene = new ThreeScene(containerRef.current);
+    sceneRef.current = threeScene;
+
+    // Create test particle
+    const particleSystem = threeScene.getParticleSystem();
+    if (particleSystem) {
+      particleSystem.createTestParticle();
+      setParticleCount(particleSystem.getParticleCount());
+    }
+
+    // Start animation loop
+    threeScene.animate();
+
+    // Cleanup on unmount
+    return () => {
+      if (sceneRef.current) {
+        sceneRef.current.cleanup();
+      }
+    };
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="app">
+      <div className="canvas-container" ref={containerRef}>
+        {/* Three.js canvas will be inserted here */}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
+      
+      {/* Info overlay */}
+      <div className="info-overlay">
+        <p>ParticleHands - Animation Test</p>
+        <p style={{ fontSize: '12px', marginTop: '4px', opacity: 0.7 }}>
+          Watch the particle move and bounce! ✨
         </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+
+      {/* Performance Monitor */}
+      <PerformanceMonitor particleCount={particleCount} />
+    </div>
+  );
 }
 
-export default App
+export default App;
