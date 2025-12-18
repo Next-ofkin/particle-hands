@@ -1,6 +1,9 @@
 import * as THREE from 'three';
-import type { Particle } from '../types/particle';
+import type { Particle, Vector3 } from '../types/particle';
 import type { Hand3DPosition } from '../types/gesture';
+import { ShapeGenerator } from './ShapeGenerator';
+
+type ShapeMode = 'free' | 'sphere' | 'cube' | 'helix' | 'ring' | 'heart';
 
 export class MegaParticleSystem {
   private particles: Particle[] = [];
@@ -15,10 +18,12 @@ export class MegaParticleSystem {
   private displayCount: number = 1000;
   private attractionPoint: THREE.Vector3 | null = null;
   private isAttracting: boolean = false;
+  private currentShape: ShapeMode = 'free';
+  private targetPositions: Vector3[] = [];
 
   constructor(scene: THREE.Scene) {
     this.scene = scene;
-    console.log('🌈 PROFESSIONAL NANOBOT System - Synchronized Formation');
+    console.log('🌈 ADVANCED NANOBOT System - Shape Formation Ready');
   }
 
   private noise(x: number, y: number, z: number): number {
@@ -35,7 +40,7 @@ export class MegaParticleSystem {
   }
 
   public createMegaParticles(actualCount: number = 1000) {
-    console.log(`🌈 Creating PROFESSIONAL formation system...`);
+    console.log(`🌈 Creating SHAPE-FORMING nanobots...`);
 
     for (let i = 0; i < actualCount; i++) {
       const color = this.getRandomColor();
@@ -98,7 +103,43 @@ export class MegaParticleSystem {
     this.particleMesh = new THREE.Points(this.geometry, this.material);
     this.scene.add(this.particleMesh);
 
-    console.log(`✅ PROFESSIONAL formation ready!`);
+    console.log(`✅ Shape-forming nanobots ready!`);
+  }
+
+  // Form a shape
+  public formShape(shape: ShapeMode) {
+    this.currentShape = shape;
+    
+    if (shape === 'free') {
+      this.targetPositions = [];
+      console.log('🌊 Released to free flow');
+      return;
+    }
+
+    const count = this.particles.length;
+    
+    switch (shape) {
+      case 'sphere':
+        this.targetPositions = ShapeGenerator.generateSphere(count);
+        console.log('🔵 Forming SPHERE');
+        break;
+      case 'cube':
+        this.targetPositions = ShapeGenerator.generateCube(count);
+        console.log('🟦 Forming CUBE');
+        break;
+      case 'helix':
+        this.targetPositions = ShapeGenerator.generateHelix(count);
+        console.log('🧬 Forming HELIX');
+        break;
+      case 'ring':
+        this.targetPositions = ShapeGenerator.generateRing(count);
+        console.log('💍 Forming RING');
+        break;
+      case 'heart':
+        this.targetPositions = ShapeGenerator.generateHeart(count);
+        console.log('❤️ Forming HEART');
+        break;
+    }
   }
 
   public setAttractionPoint(position: Hand3DPosition | null) {
@@ -115,13 +156,14 @@ export class MegaParticleSystem {
 
     this.time += 0.012;
     const boundary = 60;
+    const isForming = this.currentShape !== 'free';
 
     for (let i = 0; i < this.particles.length; i++) {
       const particle = this.particles[i];
 
-      // Ambient organic flow (gentle baseline movement)
+      // Ambient noise (reduced when forming shapes)
       const noiseScale = 0.018;
-      const noiseStrength = this.isAttracting ? 0.03 : 0.08; // Less noise when attracting
+      const noiseStrength = isForming ? 0.02 : (this.isAttracting ? 0.03 : 0.08);
       
       const noiseX = this.noise(
         particle.position.x * noiseScale,
@@ -145,23 +187,35 @@ export class MegaParticleSystem {
       particle.velocity.y += noiseY;
       particle.velocity.z += noiseZ;
 
-      // PROFESSIONAL FORMATION (when mouse active)
-      if (this.isAttracting && this.attractionPoint) {
+      // SHAPE FORMATION (highest priority)
+      if (isForming && this.targetPositions[i]) {
+        const target = this.targetPositions[i];
+        const dx = target.x - particle.position.x;
+        const dy = target.y - particle.position.y;
+        const dz = target.z - particle.position.z;
+        
+        const shapeStrength = 0.12; // Strong pull to shape
+        
+        particle.velocity.x += dx * shapeStrength;
+        particle.velocity.y += dy * shapeStrength;
+        particle.velocity.z += dz * shapeStrength;
+      }
+      // MOUSE ATTRACTION (when not forming shape)
+      else if (this.isAttracting && this.attractionPoint && !isForming) {
         const dx = this.attractionPoint.x - particle.position.x;
         const dy = this.attractionPoint.y - particle.position.y;
         const dz = this.attractionPoint.z - particle.position.z;
         
         const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
         
-        // SPACING SYSTEM - each particle maintains distance from others
+        // Separation from other particles
         let separationForceX = 0;
         let separationForceY = 0;
         let separationForceZ = 0;
         
-        const separationDistance = 3; // Minimum distance between particles
+        const separationDistance = 3;
         const separationStrength = 0.08;
         
-        // Check nearby particles and separate
         for (let j = 0; j < this.particles.length; j++) {
           if (i === j) continue;
           
@@ -171,7 +225,6 @@ export class MegaParticleSystem {
           const odz = particle.position.z - other.position.z;
           const oDist = Math.sqrt(odx * odx + ody * ody + odz * odz);
           
-          // If too close, push apart
           if (oDist < separationDistance && oDist > 0) {
             const pushForce = (separationDistance - oDist) / separationDistance;
             separationForceX += (odx / oDist) * pushForce * separationStrength;
@@ -180,14 +233,12 @@ export class MegaParticleSystem {
           }
         }
         
-        // Apply separation force
         particle.velocity.x += separationForceX;
         particle.velocity.y += separationForceY;
         particle.velocity.z += separationForceZ;
         
-        // Gentle attraction to mouse (reduced strength for smooth flow)
-        const attractionStrength = 0.08; // Reduced from 0.15
-        const safeDistance = 15; // Stay at safe distance, don't merge at cursor
+        const attractionStrength = 0.08;
+        const safeDistance = 15;
         
         if (distance > safeDistance) {
           const forceX = (dx / distance) * attractionStrength;
@@ -198,7 +249,6 @@ export class MegaParticleSystem {
           particle.velocity.y += forceY;
           particle.velocity.z += forceZ;
         } else {
-          // Orbit around cursor instead of merging
           const orbitStrength = 0.05;
           const perpX = -dy / distance;
           const perpY = dx / distance;
@@ -208,7 +258,7 @@ export class MegaParticleSystem {
         }
       }
 
-      // Speed limit (prevents crazy fast particles)
+      // Speed limit
       const maxSpeed = 2.5;
       const speed = Math.sqrt(
         particle.velocity.x * particle.velocity.x +
@@ -222,7 +272,7 @@ export class MegaParticleSystem {
         particle.velocity.z = (particle.velocity.z / speed) * maxSpeed;
       }
 
-      // Damping (smooth deceleration)
+      // Damping
       const damping = 0.96;
       particle.velocity.x *= damping;
       particle.velocity.y *= damping;
@@ -233,16 +283,17 @@ export class MegaParticleSystem {
       particle.position.y += particle.velocity.y;
       particle.position.z += particle.velocity.z;
 
-      // Soft boundaries
-      const pushStrength = 0.025;
+      // Boundaries (looser when forming shapes)
+      const pushStrength = isForming ? 0.01 : 0.025;
+      const shapeBoundary = isForming ? 80 : boundary;
       
-      if (Math.abs(particle.position.x) > boundary) {
+      if (Math.abs(particle.position.x) > shapeBoundary) {
         particle.velocity.x -= Math.sign(particle.position.x) * pushStrength;
       }
-      if (Math.abs(particle.position.y) > boundary) {
+      if (Math.abs(particle.position.y) > shapeBoundary) {
         particle.velocity.y -= Math.sign(particle.position.y) * pushStrength;
       }
-      if (Math.abs(particle.position.z) > 15) {
+      if (Math.abs(particle.position.z) > 20) {
         particle.velocity.z -= Math.sign(particle.position.z) * pushStrength;
       }
 
@@ -257,6 +308,10 @@ export class MegaParticleSystem {
     }
   }
 
+  public getCurrentShape(): ShapeMode {
+    return this.currentShape;
+  }
+
   public getParticleCount(): number {
     return this.displayCount;
   }
@@ -265,6 +320,6 @@ export class MegaParticleSystem {
     if (this.particleMesh) this.scene.remove(this.particleMesh);
     if (this.geometry) this.geometry.dispose();
     if (this.material) this.material.dispose();
-    console.log('🧹 Professional formation cleaned up');
+    console.log('🧹 Shape-forming system cleaned up');
   }
 }
