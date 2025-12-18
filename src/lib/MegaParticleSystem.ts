@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import type { Particle, Vector3 } from '../types/particle';
 import type { Hand3DPosition } from '../types/gesture';
 import { ShapeGenerator } from './ShapeGenerator';
+import { ColorThemes, type ThemeName } from './ColorThemes';
 
 type ShapeMode = 'free' | 'sphere' | 'cube' | 'helix' | 'ring' | 'heart';
 
@@ -106,8 +107,8 @@ export class MegaParticleSystem {
     console.log(`✅ Shape-forming nanobots ready!`);
   }
 
-  // Form a shape
-  public formShape(shape: ShapeMode) {
+  // Form a shape at specific position
+  public formShape(shape: ShapeMode, centerPosition?: { x: number; y: number; z: number }) {
     this.currentShape = shape;
     
     if (shape === 'free') {
@@ -117,28 +118,65 @@ export class MegaParticleSystem {
     }
 
     const count = this.particles.length;
+    let positions: Vector3[] = [];
     
     switch (shape) {
       case 'sphere':
-        this.targetPositions = ShapeGenerator.generateSphere(count);
+        positions = ShapeGenerator.generateSphere(count);
         console.log('🔵 Forming SPHERE');
         break;
       case 'cube':
-        this.targetPositions = ShapeGenerator.generateCube(count);
+        positions = ShapeGenerator.generateCube(count);
         console.log('🟦 Forming CUBE');
         break;
       case 'helix':
-        this.targetPositions = ShapeGenerator.generateHelix(count);
+        positions = ShapeGenerator.generateHelix(count);
         console.log('🧬 Forming HELIX');
         break;
       case 'ring':
-        this.targetPositions = ShapeGenerator.generateRing(count);
+        positions = ShapeGenerator.generateRing(count);
         console.log('💍 Forming RING');
         break;
       case 'heart':
-        this.targetPositions = ShapeGenerator.generateHeart(count);
+        positions = ShapeGenerator.generateHeart(count);
         console.log('❤️ Forming HEART');
         break;
+    }
+    
+    // Offset positions to center location if provided
+    if (centerPosition) {
+      this.targetPositions = positions.map(pos => ({
+        x: pos.x + centerPosition.x,
+        y: pos.y + centerPosition.y,
+        z: pos.z + centerPosition.z,
+      }));
+    } else {
+      this.targetPositions = positions;
+    }
+  }
+
+  // Change color theme
+  public changeTheme(theme: ThemeName) {
+    const colorTheme = ColorThemes.getTheme(theme);
+    
+    console.log(`🎨 Changing theme to: ${colorTheme.displayName} ${colorTheme.emoji}`);
+    
+    // Update all particle colors
+    for (let i = 0; i < this.particles.length; i++) {
+      const newColor = colorTheme.getColor();
+      this.particles[i].color = `#${newColor.getHexString()}`;
+      
+      // Update color buffer
+      if (this.colors) {
+        this.colors[i * 3] = newColor.r;
+        this.colors[i * 3 + 1] = newColor.g;
+        this.colors[i * 3 + 2] = newColor.b;
+      }
+    }
+    
+    // Update geometry colors
+    if (this.geometry && this.colors) {
+      this.geometry.attributes.color.needsUpdate = true;
     }
   }
 
