@@ -168,41 +168,38 @@ function App() {
     <div className="app">
       <div className="canvas-container" ref={containerRef} />
       
-      {/* Top Info */}
-      <div className="info-overlay">
-        <p>ParticleHands ✨</p>
-        <p style={{ 
-          fontSize: '13px', 
-          marginTop: '8px', 
-          color: '#6366F1',
-          fontWeight: 600 
-        }}>
-          {currentShape}
-        </p>
-        <p style={{ 
-          fontSize: '11px', 
-          marginTop: '4px', 
-          color: '#F59E0B',
-          opacity: 0.8
-        }}>
-          {currentTheme}
-        </p>
+      {/* Minimal Top Info */}
+      <div style={{
+        position: 'fixed',
+        top: '16px',
+        left: '16px',
+        background: 'rgba(0, 0, 0, 0.5)',
+        backdropFilter: 'blur(10px)',
+        padding: '8px 12px',
+        borderRadius: '8px',
+        fontSize: '11px',
+        color: 'rgba(255, 255, 255, 0.9)',
+        zIndex: 999,
+      }}>
+        <div style={{ fontWeight: 600 }}>{currentShape}</div>
+        <div style={{ color: 'rgba(255, 255, 255, 0.6)', marginTop: '2px' }}>{currentTheme}</div>
       </div>
 
-      {/* Toggle Controls Button (Mobile) */}
+      {/* Compact Toggle Button */}
       <button
         onClick={() => setShowControls(!showControls)}
         style={{
           position: 'fixed',
-          top: '20px',
-          right: '20px',
-          background: 'rgba(0, 0, 0, 0.7)',
-          border: '2px solid rgba(255, 255, 255, 0.3)',
-          borderRadius: '50%',
-          width: '50px',
-          height: '50px',
+          top: '16px',
+          right: '16px',
+          background: 'rgba(0, 0, 0, 0.5)',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          borderRadius: '8px',
+          width: '36px',
+          height: '36px',
           color: 'white',
-          fontSize: '24px',
+          fontSize: '18px',
           cursor: 'pointer',
           zIndex: 1000,
           display: 'flex',
@@ -213,159 +210,106 @@ function App() {
         {showControls ? '✕' : '☰'}
       </button>
 
-      {/* Mobile Control Panel */}
+      {/* Sleek Bottom Control Bar */}
       {showControls && (
         <div style={{
           position: 'fixed',
-          bottom: '20px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          background: 'rgba(0, 0, 0, 0.85)',
-          padding: '16px',
-          borderRadius: '16px',
-          border: '2px solid rgba(255, 255, 255, 0.2)',
+          bottom: '16px',
+          left: '16px',
+          right: '16px',
+          background: 'rgba(0, 0, 0, 0.75)',
+          backdropFilter: 'blur(20px)',
+          padding: '12px',
+          borderRadius: '12px',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
           zIndex: 1000,
-          maxWidth: '90vw',
-          width: 'auto',
+          maxWidth: '600px',
+          margin: '0 auto',
         }}>
-          {/* Shape Buttons */}
+          {/* Compact Shape Pills */}
           <div style={{
             display: 'flex',
-            gap: '8px',
-            marginBottom: '12px',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
+            gap: '6px',
+            marginBottom: '8px',
+            justifyContent: 'space-between',
           }}>
-            <button
-              onClick={() => handleShapeSelect('sphere')}
-              style={{
-                background: selectedShape === 'sphere' ? 'rgba(99, 102, 241, 0.8)' : 'rgba(255, 255, 255, 0.1)',
-                border: '2px solid rgba(255, 255, 255, 0.3)',
-                borderRadius: '12px',
-                padding: '12px 16px',
-                color: 'white',
-                fontSize: '14px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                minWidth: '80px',
-              }}
-            >
-              🔵 Sphere
-            </button>
-            <button
-              onClick={() => handleShapeSelect('cube')}
-              style={{
-                background: selectedShape === 'cube' ? 'rgba(99, 102, 241, 0.8)' : 'rgba(255, 255, 255, 0.1)',
-                border: '2px solid rgba(255, 255, 255, 0.3)',
-                borderRadius: '12px',
-                padding: '12px 16px',
-                color: 'white',
-                fontSize: '14px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                minWidth: '80px',
-              }}
-            >
-              🟦 Cube
-            </button>
-            <button
-              onClick={() => handleShapeSelect('helix')}
-              style={{
-                background: selectedShape === 'helix' ? 'rgba(99, 102, 241, 0.8)' : 'rgba(255, 255, 255, 0.1)',
-                border: '2px solid rgba(255, 255, 255, 0.3)',
-                borderRadius: '12px',
-                padding: '12px 16px',
-                color: 'white',
-                fontSize: '14px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                minWidth: '80px',
-              }}
-            >
-              🧬 Helix
-            </button>
-            <button
-              onClick={() => handleShapeSelect('ring')}
-              style={{
-                background: selectedShape === 'ring' ? 'rgba(99, 102, 241, 0.8)' : 'rgba(255, 255, 255, 0.1)',
-                border: '2px solid rgba(255, 255, 255, 0.3)',
-                borderRadius: '12px',
-                padding: '12px 16px',
-                color: 'white',
-                fontSize: '14px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                minWidth: '80px',
-              }}
-            >
-              💍 Ring
-            </button>
-            <button
-              onClick={() => handleShapeSelect('heart')}
-              style={{
-                background: selectedShape === 'heart' ? 'rgba(99, 102, 241, 0.8)' : 'rgba(255, 255, 255, 0.1)',
-                border: '2px solid rgba(255, 255, 255, 0.3)',
-                borderRadius: '12px',
-                padding: '12px 16px',
-                color: 'white',
-                fontSize: '14px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                minWidth: '80px',
-              }}
-            >
-              ❤️ Heart
-            </button>
+            {shapes.map((shape) => (
+              <button
+                key={shape}
+                onClick={() => handleShapeSelect(shape)}
+                style={{
+                  background: selectedShape === shape 
+                    ? 'linear-gradient(135deg, rgba(99, 102, 241, 0.9), rgba(139, 92, 246, 0.9))' 
+                    : 'rgba(255, 255, 255, 0.08)',
+                  border: selectedShape === shape 
+                    ? '1px solid rgba(99, 102, 241, 0.5)' 
+                    : '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '8px',
+                  padding: '8px 4px',
+                  color: 'white',
+                  fontSize: '20px',
+                  cursor: 'pointer',
+                  flex: 1,
+                  transition: 'all 0.2s',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                {shape === 'sphere' && '🔵'}
+                {shape === 'cube' && '🟦'}
+                {shape === 'helix' && '🧬'}
+                {shape === 'ring' && '💍'}
+                {shape === 'heart' && '❤️'}
+              </button>
+            ))}
           </div>
 
-          {/* Action Buttons */}
+          {/* Compact Action Row */}
           <div style={{
             display: 'flex',
-            gap: '8px',
-            justifyContent: 'center',
+            gap: '6px',
           }}>
             <button
               onClick={handleThemeCycle}
               style={{
-                background: 'rgba(245, 158, 11, 0.8)',
-                border: '2px solid rgba(255, 255, 255, 0.3)',
-                borderRadius: '12px',
-                padding: '12px 20px',
+                background: 'rgba(245, 158, 11, 0.2)',
+                border: '1px solid rgba(245, 158, 11, 0.3)',
+                borderRadius: '8px',
+                padding: '8px 12px',
                 color: 'white',
-                fontSize: '14px',
-                fontWeight: 600,
+                fontSize: '12px',
+                fontWeight: 500,
                 cursor: 'pointer',
                 flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '4px',
               }}
             >
-              🎨 Theme
+              🎨
             </button>
             <button
               onClick={handleFreeFlow}
               style={{
-                background: 'rgba(16, 185, 129, 0.8)',
-                border: '2px solid rgba(255, 255, 255, 0.3)',
-                borderRadius: '12px',
-                padding: '12px 20px',
+                background: 'rgba(16, 185, 129, 0.2)',
+                border: '1px solid rgba(16, 185, 129, 0.3)',
+                borderRadius: '8px',
+                padding: '8px 12px',
                 color: 'white',
-                fontSize: '14px',
-                fontWeight: 600,
+                fontSize: '12px',
+                fontWeight: 500,
                 cursor: 'pointer',
-                flex: 1,
+                flex: 2,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '4px',
               }}
             >
               🌊 Free Flow
             </button>
-          </div>
-
-          {/* Instructions */}
-          <div style={{
-            marginTop: '12px',
-            fontSize: '11px',
-            color: 'rgba(255, 255, 255, 0.6)',
-            textAlign: 'center',
-          }}>
-            Tap anywhere to form selected shape
           </div>
         </div>
       )}
@@ -376,6 +320,7 @@ function App() {
         bottom: '20px',
         left: '20px',
         background: 'rgba(0, 0, 0, 0.7)',
+        backdropFilter: 'blur(10px)',
         padding: '12px 16px',
         borderRadius: '8px',
         fontSize: '12px',
@@ -385,10 +330,8 @@ function App() {
         <div style={{ fontWeight: 600, marginBottom: '6px', color: 'rgba(255, 255, 255, 0.9)' }}>
           Desktop Controls:
         </div>
-        <div>🖱️ Left Click: Form {shapeNames[selectedShape]}</div>
-        <div style={{ marginTop: '4px' }}>🖱️ Right Click: Cycle shapes</div>
-        <div style={{ marginTop: '4px' }}>⌨️ 1-5: Select shape • 0: Free flow</div>
-        <div style={{ marginTop: '4px', color: '#F59E0B' }}>⌨️ C: Cycle color themes</div>
+        <div>🖱️ Click: Form • Right-click: Cycle</div>
+        <div style={{ marginTop: '4px' }}>⌨️ 1-5: Shapes • 0: Free • C: Theme</div>
       </div>
 
       <PerformanceMonitor particleCount={particleCount} />
